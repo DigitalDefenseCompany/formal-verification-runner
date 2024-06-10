@@ -1,0 +1,26 @@
+name: Formal Verification Runner Demo
+
+# This workflow will only run when manually triggered
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    name: Run Formal Verification
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Formal Verification Runner
+        id: run-verification
+        uses: ./
+
+      - name: Print Output
+        run:
+          'echo "Verification Result: ${{
+          steps.run-verification.outputs.verification_result }}"'

@@ -1,30 +1,43 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import { wait } from './wait'
+import * as shell from 'shelljs'
+import * as fs from 'fs'
+import * as path from 'path'
 
-/**
- * The main function for the action.
- */
 export async function run(): Promise<void> {
   try {
-    // Get the action input(s)
-    const ms: number = parseInt(core.getInput('milliseconds'), 10)
+    const { owner, repo } = github.context.repo
 
-    // Output the payload for debugging
-    // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
-    core.debug(
-      `The event payload: ${JSON.stringify(github.context.payload, null, 2)}`
-    )
+    // Clone the repo
+    core.info(`Cloning repository: https://github.com/${owner}/${repo}.git`)
+    shell.exec(`git clone https://github.com/${owner}/${repo}.git repo`)
+    shell.cd('repo')
 
-    // Log the current timestamp, wait, then log the new timestamp
-    core.info(new Date().toTimeString())
-    await wait(ms)
-    core.info(new Date().toTimeString())
+    // Install dependencies
+    core.info('Installing dependencies...')
+    shell.exec('forge install --no-commit')
+    shell.exec('forge install foundry-rs/forge-std --no-commit')
+    shell.exec('forge install a16z/halmos-cheatcodes --no-commit')
 
-    // Set outputs for other workflow steps to use
-    core.setOutput('time', new Date().toTimeString())
+    // Run Halmos verification
+    core.info('Running Halmos verification...')
+    const halmosOutput = shell.exec('halmos --function check', {
+      silent: true
+    }).stdout
+
+    // Check for errors
+    if (shell.error()) {
+      throw new Error('Halmos verification failed.')
+    }
+
+    // Save verification result to a file
+    const resultFilePath = path.join(process.cwd(), 'halmos_output.txt')
+    fs.writeFileSync(resultFilePath, halmosOutput, 'utf-8')
+
+    // Set output for verification result
+    core.setOutput('verification_result', halmosOutput)
+    core.info('Halmos verification completed successfully.')
   } catch (error) {
-    // Fail the workflow run if an error occurs
     if (error instanceof Error) core.setFailed(error.message)
   }
 }

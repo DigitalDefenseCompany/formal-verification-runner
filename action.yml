@@ -1,21 +1,12 @@
-name: 'The name of your action here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Formal Verification Runner'
+description:
+  'Runs formal verification using Halmos on the generated formal specs.'
+author: 'The Digital Defense Company'
 
-# Define your inputs here.
-inputs:
-  milliseconds:
-    description: 'Your input description here'
-    required: true
-    default: '1000'
-
-# Define your outputs here.
 outputs:
-  time:
-    description: 'Your output description here'
+  verification_result:
+    description: 'Result of the formal verification'
 
 runs:
   using: docker
   image: Dockerfile
-  env:
-    INPUT_MILLISECONDS: ${{ inputs.milliseconds }}
