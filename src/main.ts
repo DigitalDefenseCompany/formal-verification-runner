@@ -21,9 +21,7 @@ export async function run(): Promise<void> {
 
     // Run Halmos verification
     core.info('Running Halmos verification...')
-    const halmosOutput = shell.exec('halmos --function check', {
-      silent: true
-    }).stdout
+    const halmosOutput = shell.exec('halmos --function check').stdout
 
     // Check for errors
     if (shell.error()) {

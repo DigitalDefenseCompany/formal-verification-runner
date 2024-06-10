@@ -36365,9 +36365,7 @@ async function run() {
         shell.exec('forge install a16z/halmos-cheatcodes --no-commit');
         // Run Halmos verification
         core.info('Running Halmos verification...');
-        const halmosOutput = shell.exec('halmos --function check', {
-            silent: true
-        }).stdout;
+        const halmosOutput = shell.exec('halmos --function check').stdout;
         // Check for errors
         if (shell.error()) {
             throw new Error('Halmos verification failed.');
