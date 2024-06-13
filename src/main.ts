@@ -7,10 +7,13 @@ import * as path from 'path'
 export async function run(): Promise<void> {
   try {
     const { owner, repo } = github.context.repo
+    const repoToken = core.getInput('repo_token', { required: true })
 
     // Clone the repo
     core.info(`Cloning repository: https://github.com/${owner}/${repo}.git`)
-    shell.exec(`git clone https://github.com/${owner}/${repo}.git repo`)
+    shell.exec(
+      `git clone https://${repoToken}@github.com/${owner}/${repo}.git repo`
+    )
     shell.cd('repo')
 
     // Install dependencies

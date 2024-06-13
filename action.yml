@@ -1,7 +1,11 @@
 name: 'Formal Verification Runner'
-description:
-  'Runs formal verification using Halmos on the generated formal specs.'
+description: 'Runs formal verification using Halmos on the generated formal specs.'
 author: 'The Digital Defense Company'
+
+inputs:
+  repo_token:
+    description: 'GitHub token for cloning the repository'
+    required: true
 
 outputs:
   verification_result:
