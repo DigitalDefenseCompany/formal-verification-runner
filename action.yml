@@ -12,5 +12,5 @@ outputs:
     description: 'Result of the formal verification'
 
 runs:
-  using: docker
-  image: Dockerfile
+  using: 'docker'
+  image: 'ghcr.io/${{ github.repository_owner }}/formal-verification-runner:latest'
