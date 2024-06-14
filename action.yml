@@ -13,4 +13,4 @@ outputs:
 
 runs:
   using: 'docker'
-  image: 'ghcr.io/digitaldefensecompany/formal-verification-runner:latest'
+  image: 'docker://ghcr.io/digitaldefensecompany/formal-verification-runner:latest'
